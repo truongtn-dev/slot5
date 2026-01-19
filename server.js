@@ -1,19 +1,27 @@
-const express = require("express");
-const tasksRoutes = require("./src/routes/tasksRoutes");
+// Load env FIRST
 const dotenv = require("dotenv");
 dotenv.config();
+
+// Imports
+const express = require("express");
+const connectDB = require("./src/config/db");
+const tasksRoutes = require("./src/routes/tasksRoutes");
+
+// App init
 const app = express();
-// middlewares
+
+// Middlewares
 app.use(express.json());
-// Parse form-urlencoded (form HTML)
 app.use(express.urlencoded({ extended: true }));
+
+// Connect DB BEFORE routes & listen
+connectDB();
+
+// Routes
 app.use("/api/tasks", tasksRoutes);
 
-const connectDB = require("./src/config/db");
-// Connect to the Database
-connectDB();
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on
-http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
